@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Surf Browser</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-top">
+        <button class="sidebar-btn home-btn" title="Главная">🏠</button>
+        <button class="sidebar-btn search-btn" title="Поиск">🔍</button>
+      </div>
+
+      <div class="sidebar-middle">
+        <div class="tabs-container" id="tabsContainer">
+        </div>
+        <button class="sidebar-btn new-tab-btn" title="Новая вкладка">+</button>
+      </div>
+
+      <div class="sidebar-bottom">
+        <button class="sidebar-btn history-btn" title="История">📜</button>
+        <button class="sidebar-btn bookmarks-btn" title="Закладки">⭐</button>
+        <button class="sidebar-btn downloads-btn" title="Загрузки">⬇️</button>
+        <button class="sidebar-btn settings-btn" title="Настройки">⚙️</button>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      <!-- Address Bar & Controls -->
+      <div class="address-bar">
+        <div class="nav-buttons">
+          <button class="nav-btn back-btn" title="Назад">←</button>
+          <button class="nav-btn forward-btn" title="Вперед">→</button>
+          <button class="nav-btn reload-btn" title="Обновить">🔄</button>
+        </div>
+
+        <div class="search-input-container">
+          <input 
+            type="text" 
+            class="search-input" 
+            id="addressInput"
+            placeholder="Введите URL или поисковый запрос..."
+            autocomplete="off"
+          >
+          <div class="suggestions-list" id="suggestionsList"></div>
+        </div>
+
+        <div class="address-bar-right">
+          <button class="music-btn" title="Музыка">🎵</button>
+          <button class="devtools-btn" title="DevTools">👨‍💻</button>
+          <button class="profile-btn" title="Профиль">👤</button>
+        </div>
+      </div>
+
+      <!-- Browser Views Container -->
+      <div class="browser-views-container" id="viewsContainer"></div>
+
+      <!-- Home Page (New Tab Page) -->
+      <div class="home-page" id="homePage">
+        <div class="home-content">
+          <canvas id="wallpaperCanvas" class="wallpaper"></canvas>
+
+          <div class="home-overlay">
+            <div class="home-top">
+              <div class="greeting-clock">
+                <div class="clock" id="clock">00:00</div>
+                <div class="date" id="date">Дата</div>
+                <div class="greeting" id="greeting">Добро пожаловать</div>
+              </div>
+
+              <div class="home-search">
+                <input 
+                  type="text" 
+                  class="home-search-input" 
+                  id="homeSearchInput"
+                  placeholder="Поиск или введите URL..."
+                  autocomplete="off"
+                >
+                <div class="home-suggestions" id="homeSuggestions"></div>
+              </div>
+            </div>
+
+            <div class="tiles-section">
+              <h2 class="tiles-title">Мои сайты</h2>
+              <div class="tiles-grid" id="tilesGrid">
+              </div>
+              <button class="add-tile-btn" id="addTileBtn">+ Добавить сайт</button>
+            </div>
+
+            <div class="mini-player" id="miniPlayer">
+              <div class="mini-player-header">
+                <span class="mini-player-title">Не воспроизводится</span>
+                <button class="mini-player-close" id="closePlayer">×</button>
+              </div>
+              <div class="mini-player-content">
+                <img class="player-cover" src="" alt="Cover">
+                <div class="player-info">
+                  <div class="player-track">Название трека</div>
+                  <div class="player-artist">Исполнитель</div>
+                </div>
+              </div>
+              <div class="mini-player-controls">
+                <button class="player-btn">⏮</button>
+                <button class="player-btn play-btn">▶</button>
+                <button class="player-btn">⏭</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Settings Page -->
+      <div class="settings-page" id="settingsPage" style="display: none;">
+        <div class="settings-container">
+          <div class="settings-header">
+            <h1>Настройки</h1>
+            <button class="close-settings">×</button>
+          </div>
+
+          <div class="settings-content">
+            <section class="settings-section">
+              <h2>Оформление</h2>
+              <div class="setting-item">
+                <label>Тема:</label>
+                <select id="themeSelect">
+                  <option value="dark">Темная</option>
+                  <option value="light">Светлая</option>
+                </select>
+              </div>
+              <div class="setting-item">
+                <label>Интенсивность стекла:</label>
+                <input type="range" id="glassIntensity" min="0" max="100" value="80">
+              </div>
+            </section>
+          </div>
+        </div>
+      </div>
+
+      <!-- AI Chat Sidebar -->
+      <aside class="ai-chat" id="aiChat" style="display: none;">
+        <div class="ai-header">
+          <h2>Surf AI</h2>
+          <button class="close-ai">×</button>
+        </div>
+        <div class="ai-messages" id="aiMessages"></div>
+        <div class="ai-input-container">
+          <input 
+            type="text" 
+            class="ai-input" 
+            id="aiInput"
+            placeholder="Напишите (Говорите 'Серф' для команд)..."
+            autocomplete="off"
+          >
+          <button class="ai-voice-btn" id="aiVoiceBtn">🎤</button>
+          <button class="ai-send-btn" id="aiSendBtn">📤</button>
+        </div>
+      </aside>
+
+      <!-- Player Popup -->
+      <div class="player-popup" id="playerPopup" style="display: none;">
+        <div class="player-content">
+          <div class="player-close">×</div>
+          <img class="player-cover-large" src="" alt="Cover">
+          <div class="player-info-large">
+            <div class="player-track-large">Название трека</div>
+            <div class="player-artist-large">Исполнитель</div>
+          </div>
+          <div class="player-progress">
+            <span class="player-time-current">0:00</span>
+            <input type="range" class="player-progress-bar" min="0" max="100" value="0">
+            <span class="player-time-total">0:00</span>
+          </div>
+          <div class="player-volume">
+            <span>🔊</span>
+            <input type="range" class="player-volume-slider" min="0" max="100" value="70">
+          </div>
+          <div class="player-controls-large">
+            <button class="player-btn-large">⏮</button>
+            <button class="player-btn-large play-btn-large">▶</button>
+            <button class="player-btn-large">⏭</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Profile Popup -->
+      <div class="profile-popup" id="profilePopup" style="display: none;">
+        <div class="profile-menu">
+          <div class="profile-header">
+            <img class="profile-avatar" src="" alt="Avatar">
+            <span class="profile-username">Пользователь</span>
+          </div>
+          <button class="profile-menu-item">✏️ Изменить ник</button>
+          <button class="profile-menu-item">🖼️ Изменить аватар</button>
+          <button class="profile-menu-item">⚙️ Настройки</button>
+          <hr>
+          <button class="profile-menu-item logout">🚪 Выход</button>
+        </div>
+      </div>
+
+      <!-- Add Tile Modal -->
+      <div class="modal" id="addTileModal" style="display: none;">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2>Добавить сайт</h2>
+            <button class="modal-close">×</button>
+          </div>
+          <div class="modal-body">
+            <input 
+              type="text" 
+              class="modal-input" 
+              id="tileUrlInput"
+              placeholder="Введите URL (например: google.com)"
+            >
+          </div>
+          <div class="modal-footer">
+            <button class="btn-secondary">Отмена</button>
+            <button class="btn-primary">Добавить</button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="renderer.js"></script>
+</body>
+</html>

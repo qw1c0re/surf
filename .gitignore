@@ -1,0 +1,10 @@
+node_modules/
+dist/
+*.exe
+*.dmg
+*.deb
+out/
+.DS_Store
+*.log
+yarn-error.log*
+.env.local
